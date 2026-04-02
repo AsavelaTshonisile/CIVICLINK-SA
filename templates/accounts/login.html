@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - CIVICLINK SA{% endblock %}
+
+{% block content %}
+<div class="auth-container split-layout">
+    <div class="auth-box glassmorphism delay-1">
+        <h2>Welcome Back to <span class="highlight">CIVICLINK</span></h2>
+        <p class="subtitle">Please login to report or check statuses.</p>
+        
+        <form method="post" action="{% url 'login' %}" class="auth-form" id="loginForm">
+            {% csrf_token %}
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required placeholder="Enter your username">
+            </div>
+            
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Enter your password">
+            </div>
+            
+            <button type="submit" class="btn-primary full-width mt-4">Login to Dashboard</button>
+        </form>
+        
+        <p class="auth-redirect">
+            Don't have an account? <a href="{% url 'signup' %}" class="highlight-link">Sign Up Here</a>
+        </p>
+    </div>
+    
+    <div class="auth-visual delay-2" style="position: relative;">
+        <div class="visual-content text-center" style="z-index: 2; position: relative;">
+            <h1>Driving <span class="highlight">Change</span> in SA</h1>
+            <p>Your transparent digital service delivery reporting platform.</p>
+            
+            <div class="analytics-preview" style="display: flex; gap: 1rem; justify-content: center; margin-top: 3rem;">
+                <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);">
+                    <h2 style="font-size: 2.5rem; margin-bottom: 0; color: #FEFCBF;">{{ pending_count }}</h2>
+                    <p style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Pending</p>
+                </div>
+                <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);">
+                    <h2 style="font-size: 2.5rem; margin-bottom: 0; color: #E6FFFA;">{{ attended_count }}</h2>
+                    <p style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Attended To</p>
+                </div>
+                <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);">
+                    <h2 style="font-size: 2.5rem; margin-bottom: 0; color: #C6F6D5;">{{ approved_count }}</h2>
+                    <p style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Fixed</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Check Status - CIVICLINK SA{% endblock %}
+
+{% block content %}
+<div class="content-wrapper delay-1">
+    <div class="section-header">
+        <h2>Your <span class="highlight">Reports</span></h2>
+        <p>Track the progress of your submitted issues in real-time.</p>
+    </div>
+
+    {% if reports %}
+        <div class="reports-grid">
+            {% for report in reports %}
+                <div class="report-card glassmorphism">
+                    <div class="report-header">
+                        <span class="badge status-{{ report.status|lower }}">{{ report.get_status_display }}</span>
+                        <span class="report-date">{{ report.created_at|date:"M d, Y H:i" }}</span>
+                    </div>
+                    <h3 class="report-title">{{ report.title }}</h3>
+                    <p class="report-type"><strong>Type:</strong> {{ report.get_issue_type_display }}</p>
+                    <p class="report-location"><strong>Location:</strong> {{ report.location }}</p>
+                    
+                    {% if report.photo %}
+                    <div style="margin: 10px 0;">
+                        <img src="{{ report.photo.url }}" alt="Report Photo" style="max-width: 100%; max-height: 200px; border-radius: 8px; border: 1px solid #e2e8f0; object-fit: cover;">
+                    </div>
+                    {% endif %}
+
+                    <div class="report-desc">
+                        {{ report.description|truncatewords:20 }}
+                    </div>
+                    {% if report.admin_comment %}
+                        <div class="admin-comment" style="margin-top: 1rem; padding: 0.8rem; background-color: rgba(0, 184, 169, 0.1); border-left: 4px solid var(--success-color); border-radius: 4px; font-size: 0.9rem;">
+                            <strong>Admin Note:</strong> {{ report.admin_comment }}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state glassmorphism">
+            <div class="empty-icon">📁</div>
+            <h3>No reports found</h3>
+            <p>You haven't submitted any reports yet.</p>
+            <a href="{% url 'report_issue' %}" class="btn-primary mt-4">Report an Issue Now</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

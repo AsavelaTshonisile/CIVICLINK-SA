@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}Report an Issue - CIVICLINK SA{% endblock %}
+
+{% block content %}
+<div class="content-wrapper delay-1">
+    <div class="form-card glassmorphism">
+        <h2 class="form-title">Report an <span class="highlight">Issue</span></h2>
+        <p class="subtitle">Please provide accurate details so we can address the problem quickly.</p>
+        
+        <form method="post" action="{% url 'report_issue' %}" class="issue-form" id="issueForm" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="input-group">
+                <label for="title">Report Title</label>
+                <input type="text" id="title" name="title" required placeholder="E.g. Large Pothole on Main St">
+            </div>
+            
+            <div class="input-group">
+                <label for="issue_type">Issue Type</label>
+                <select id="issue_type" name="issue_type" required>
+                    <option value="" disabled selected>Select an issue type</option>
+                    {% for value, label in issue_types %}
+                        <option value="{{ value }}">{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label for="location">Location / Address</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="location" name="location" required placeholder="Enter street name or landmark" style="flex: 1;">
+                    <button type="button" id="btn-gps" class="btn-secondary" style="white-space: nowrap;">📍 Use GPS</button>
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label for="photo">Upload Photo of Issue (Optional)</label>
+                <input type="file" id="photo" name="photo" accept="image/*">
+            </div>
+            
+            <div class="input-group">
+                <label for="description">Detailed Description</label>
+                <textarea id="description" name="description" rows="5" required placeholder="Describe the issue..."></textarea>
+            </div>
+            
+            <div class="form-actions mt-4">
+                <a href="{% url 'dashboard' %}" class="btn-secondary">Cancel</a>
+                <button type="submit" class="btn-primary">Submit Report</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById('issueForm').addEventListener('submit', function(e) {
+        let title = document.getElementById('title').value;
+        if(title.trim() === '') {
+            e.preventDefault();
+            alert('Title is required.');
+        }
+    });
+
+    document.getElementById('btn-gps').addEventListener('click', function() {
+        const locInput = document.getElementById('location');
+        if (navigator.geolocation) {
+            locInput.value = "Fetching GPS location...";
+            navigator.geolocation.getCurrentPosition(function(position) {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                
+                fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        locInput.value = data.display_name || `${lat}, ${lon}`;
+                    })
+                    .catch(() => {
+                        locInput.value = `${lat}, ${lon}`;
+                    });
+            }, function(error) {
+                alert("GPS Error: " + error.message);
+                locInput.value = "";
+            });
+        } else {
+            alert("Geolocation is not supported by your browser.");
+        }
+    });
+</script>
+{% endblock %}

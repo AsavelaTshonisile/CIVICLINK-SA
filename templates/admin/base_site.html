@@ -1,0 +1,43 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ title }} | CIVICLINK SA Admin{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+    <a href="{% url 'admin:index' %}" style="color: white; font-family: 'Inter', sans-serif;">
+        <span style="color: #00B8A9;">CIVIC</span>LINK SA Administration
+    </a>
+</h1>
+{% endblock %}
+
+{% block extrastyle %}
+<style>
+    /* Styling to match our Navy Blue theme */
+    #header {
+        background-color: #0F3460;
+    }
+    .module h2, .module caption, .inline-group h2 {
+        background: #0F3460;
+    }
+    div.breadcrumbs {
+        background: #00B8A9;
+    }
+    a:link, a:visited {
+        color: #0F3460;
+    }
+    a:hover {
+        color: #00B8A9;
+    }
+    .button, input[type=submit], input[type=button], .submit-row input, a.button {
+        background: #0F3460;
+        border-radius: 4px;
+    }
+    .button:hover, input[type=submit]:hover, a.button:hover {
+        background: #00B8A9;
+    }
+    #branding h1 a:hover {
+        color: #FFFFFF !important;
+    }
+</style>
+{{ block.super }}
+{% endblock %}

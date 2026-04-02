@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign Up - CIVICLINK SA{% endblock %}
+
+{% block content %}
+<div class="auth-container split-layout reverse">
+    <div class="auth-box glassmorphism delay-1">
+        <h2>Join <span class="highlight">CIVICLINK SA</span></h2>
+        <p class="subtitle">Create an account to report and track infrastructure issues.</p>
+        
+        <form method="post" action="{% url 'signup' %}" class="auth-form" id="signupForm">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="input-group">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="form-error">
+                            {{ field.errors.as_text }}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <button type="submit" class="btn-primary full-width mt-4">Register</button>
+        </form>
+        
+        <p class="auth-redirect">
+            Already have an account? <a href="{% url 'login' %}" class="highlight-link">Login Here</a>
+        </p>
+    </div>
+    
+    <div class="auth-visual alt-visual delay-2">
+        <div class="visual-content text-center">
+            <h1>Empowering <span class="highlight">Communities</span></h1>
+            <p>Your voice matters. Let's fix our cities together.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

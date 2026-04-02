@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard - CIVICLINK SA{% endblock %}
+
+{% block content %}
+<div class="content-wrapper delay-1" style="max-width: 1000px;">
+    <div class="welcome-banner glassmorphism mb-4" style="text-align: center;">
+        <h1><span class="highlight">Admin</span> Dashboard</h1>
+        <p>Overview and management of all reported infrastructure issues.</p>
+    </div>
+
+    {% if reports %}
+        <div class="reports-grid">
+            {% for report in reports %}
+                <div class="report-card glassmorphism">
+                    <div class="report-header">
+                        <span class="badge status-{{ report.status|lower }}">{{ report.get_status_display }}</span>
+                        <span class="report-date">{{ report.created_at|date:"M d, Y H:i" }}</span>
+                    </div>
+                    <h3 class="report-title">{{ report.title }}</h3>
+                    <p class="report-type"><strong>Type:</strong> {{ report.get_issue_type_display }}</p>
+                    <p class="report-location"><strong>Location:</strong> {{ report.location }}</p>
+                    <p class="report-location"><strong>Reported by:</strong> {{ report.user.username }} {% if report.user.profile.municipality %}({{ report.user.profile.municipality }}){% endif %}</p>
+                    
+                    {% if report.photo %}
+                    <div style="margin: 10px 0;">
+                        <a href="{{ report.photo.url }}" target="_blank">
+                            <img src="{{ report.photo.url }}" alt="Report Photo" style="max-width: 100%; max-height: 250px; border-radius: 8px; border: 1px solid #e2e8f0; object-fit: cover;">
+                        </a>
+                    </div>
+                    {% endif %}
+
+                    <div class="report-desc" style="margin-bottom: 1.5rem;">
+                        {{ report.description }}
+                    </div>
+                    
+                    <hr style="border: 0; border-top: 1px solid rgba(0,0,0,0.1); margin-bottom: 1rem;">
+                    
+                    <form method="POST" action="{% url 'update_status' report.id %}" style="display: flex; gap: 0.5rem; flex-direction: column;">
+                        {% csrf_token %}
+                        
+                        <label for="admin_comment_{{ report.id }}" style="font-size: 0.85rem; font-weight: 600;">Admin Comment (To User):</label>
+                        <textarea name="admin_comment" id="admin_comment_{{ report.id }}" rows="2" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; font-family: inherit;" placeholder="Leave a comment for this user...">{% if report.admin_comment %}{{ report.admin_comment }}{% endif %}</textarea>
+
+                        <label for="status-{{ report.id }}" style="font-size: 0.85rem; font-weight: 600; margin-top: 0.5rem;">Update Status:</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <select name="status" id="status-{{ report.id }}" style="flex: 1; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc;">
+                                {% for value, label in status_choices %}
+                                    <option value="{{ value }}" {% if report.status == value %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                            <button type="submit" class="btn-primary" style="padding: 0.5rem 1rem;">Save</button>
+                        </div>
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state glassmorphism" style="text-align: center;">
+            <div class="empty-icon" style="font-size: 3rem; margin-bottom: 1rem;">📁</div>
+            <h3>No reports found</h3>
+            <p>No users have submitted any issues yet.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

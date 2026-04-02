@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CIVICLINK SA{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="/" class="brand-logo">
+                <span class="highlight">CIVIC</span>LINK SA
+            </a>
+            <nav class="nav-links">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}">Dashboard</a>
+                    <a href="{% url 'report_issue' %}" class="btn-primary-outline">Report Issue</a>
+                    <a href="{% url 'check_status' %}">Status</a>
+                    
+                    {% if user.is_staff %}
+                        <a href="/admin/" style="color:var(--success-color); font-weight:bold; border: 1px solid var(--success-color); padding: 5px 10px; border-radius: 5px;">Admin Portal</a>
+                    {% endif %}
+
+                    <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="link-button">Logout ({{ user.username }})</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}">Login</a>
+                    <a href="{% url 'signup' %}" class="btn-primary">Sign Up</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        {% if messages %}
+            <div class="messages-container">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        {% block content %}
+        {% endblock content %}
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 CIVICLINK SA. Improving South African Community Services.</p>
+    </footer>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - CIVICLINK SA{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="welcome-banner glassmorphism delay-1">
+        <h1>Welcome, <span class="highlight">{{ user.username }}</span>!</h1>
+        <p>What would you like to do today?</p>
+    </div>
+    
+    <div class="action-cards delay-2">
+        <a href="{% url 'report_issue' %}" class="action-card primary-card">
+            <div class="card-icon">⚠️</div>
+            <h2>REPORT AN ISSUE</h2>
+            <p>Help us fix potholes, leaks, and more.</p>
+        </a>
+        
+        <a href="{% url 'check_status' %}" class="action-card secondary-card">
+            <div class="card-icon">🔍</div>
+            <h2>CHECK STATUS</h2>
+            <p>Track the progress of your submitted reports.</p>
+        </a>
+    </div>
+</div>
+{% endblock %}
